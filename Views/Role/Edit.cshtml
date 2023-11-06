@@ -1,0 +1,153 @@
+﻿
+@model IEnumerable<mYSelfERPWeb.ViewModels.UserMenuViewModel>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="d-flex justify-content-between align-items-center">
+        <strong class="card-title">Menu permission by User type</strong>
+        <label hidden="hidden">@ViewBag.UserTypeId</label>
+    </div>
+</div>
+<!-- /.card-header -->
+<div class="card-body">
+
+    <div id="tableContainer" class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th style="width: 5px">Sl</th>
+                    <th>Module</th>
+                    <th>Nested Menu</th>
+                    <th>Submenu</th>
+                    <th>Menu</th>
+                    <th hidden="hidden">MenuID</th>
+                    <th hidden="hidden">SubMenuID</th>
+                    <th hidden="hidden">NestedMenuID</th>
+                    <th hidden="hidden">ModuleID</th>
+                    <th>
+                        <input type="checkbox" id="checkAll">
+                        <label for="checkAll">Select All</label>
+                    </th>
+
+
+
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int sl = 1;
+                }
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@(sl++)</td>
+                        <td>@item.module_name</td>
+                        <td>@item.nested_menu_name</td>
+                        <td>@item.display_name</td>
+                        <td>@item.menu_details</td>
+                        <td hidden="hidden" class="menuId">@item.menu_id</td>
+                        <td hidden="hidden" class="submenuId">@item.sub_menu_id</td>
+                        <td hidden="hidden" class="nestedmenuId">@item.nested_menu_id</td>
+                        <td hidden="hidden" class="moduleId">@item.module_id</td>
+                        <td><input type="checkbox" @(item.is_permission == "1" ? "checked='checked'" : "") /></td>
+
+
+
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="form-actions">
+        <div class="text-end">
+            <button type="submit" id="submitButton" class="btn waves-effect waves-light btn-primary">
+                <i class="fa fa-save" aria-hidden="true"></i>
+                Update Permission
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+    $('#checkAll').on('click', function () {
+        if ($(this).is(':checked')) {
+            $('#tableContainer input[type="checkbox"]').prop('checked', true);
+            $(this).next('label').text('Unselect All');
+        } else {
+            $('#tableContainer input[type="checkbox"]').prop('checked', false);
+            $(this).next('label').text('Select All');
+        }
+    });
+
+
+
+
+$('#submitButton').click(function () {
+    var selectedData = [];
+    var userTypeId = '@ViewBag.UserTypeId';
+
+    $('#tableContainer input[type="checkbox"]:checked').each(function () {
+        var menuId = $(this).closest('tr').find('td:eq(5)').text();
+        var subMenuId = $(this).closest('tr').find('td:eq(6)').text();
+        var nestedMenuId = $(this).closest('tr').find('td:eq(7)').text();
+        var moduleId = $(this).closest('tr').find('td:eq(8)').text();
+
+        // Check if menuId and subMenuId are not empty
+        if (menuId && subMenuId && nestedMenuId) {
+            selectedData.push({
+                MenuId: menuId,
+                SubMenuId: subMenuId,
+                NestedMenuId: nestedMenuId,
+                ModuleId: moduleId
+            });
+        }
+    });
+
+    if (selectedData.length > 0) {
+        $.ajax({
+            url: '@Url.Action("Edit", "Role")',
+            type: 'POST',
+            data: { selectedData: selectedData, userTypeId: userTypeId },
+            success: function (response) {
+                if (response.success) {
+                    toastr = toastr || window.toastr;
+                    toastr.success(response.message);
+
+                    setTimeout(function () {
+                        window.location.href = response.redirectToUrl;
+                    }, 3000);
+                } else {
+                    toastr.error("Failed to update menu permission info");
+                }
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                toastr.error("Failed to update menu permission info");
+            }
+        });
+    } else {
+        // Handle case when no menu/submenu is selected
+        alert("Please select at least one menu/submenu.");
+    }
+});
+
+
+
+
+</script>
+
+
+
+
+
+
+
+

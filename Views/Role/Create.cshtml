@@ -1,0 +1,44 @@
+﻿@using mYSelfERPWeb.Models
+@model mYSelfERPWeb.ViewModels.RoleViewModel
+@{
+    string actionName = ViewContext.RouteData.Values["action"].ToString();
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+}
+
+<div class="card">
+
+    @using (Html.BeginForm(actionName, "Role", FormMethod.Post, new { id = "demo_form2", enctype = "multipart/form-data", @class = "form-horizontal form-label-left" }))
+    {
+
+        <div class="card card-default">
+            <div class="border-bottom title-part-padding">
+                <h4 class="card-title mb-0">Create New Role</h4>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Role name</label>
+                            @Html.TextBoxFor(model => model.RoleName, new { @class = "form-control", placeholder = "Enter role name" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <div class="text-end">
+                    <button type="submit" class="btn waves-effect waves-light btn-primary">
+                        <i class="fa fa-save" aria-hidden="true"></i>Save Role
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    }
+</div>
+
+
+

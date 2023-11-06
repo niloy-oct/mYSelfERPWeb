@@ -1,0 +1,79 @@
+﻿@using mYSelfERPWeb.Models
+@model mYSelfERPWeb.ViewModels.MenuViewModel
+@{
+    string actionName = ViewContext.RouteData.Values["action"].ToString();
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string headerTitle;
+    if (actionName == "Edit")
+    {
+        headerTitle = "Edit Menu ";
+    }
+    else
+    {
+        headerTitle = "New Menu ";
+
+    }
+}
+
+<div class="card">
+
+    @using (Html.BeginForm(actionName, "Menu", FormMethod.Post, new { id = "demo_form2", enctype = "multipart/form-data", @class = "form-horizontal form-label-left" }))
+    {
+        <div class="form-group">
+            @Html.HiddenFor(model => model.Menu_id)
+        </div>
+        <div class="card card-default">
+            <div class="border-bottom title-part-padding">
+                <h4 class="card-title mb-0">@headerTitle Information</h4>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Menu name</label>
+                            @Html.TextBoxFor(model => model.Menu_name, new { @class = "form-control", placeholder = "Enter menu name" })
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>ICON</label>
+                            @Html.TextBoxFor(model => model.Icon, new { @class = "form-control" })
+                            <a href="https://fontawesome.com/v4.7.0/icons/" title="Find Icon here" target="_blank"><span class="fa fa-search"></span> Find Icon here and Copy and Paste 'fa fa' icon field.</a>
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Module</label>
+                            <select id="module" class="select2 form-control custom-select" style="width: 100%; height: 36px" name="moduleId">
+                                @foreach (var item in ViewBag.Modules as IEnumerable<SelectListItem>)
+                                {
+                                    <option value="@item.Value" @(item.Value == ViewBag.SelectedModule ? "selected" : "")>@item.Text</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <div class="text-end">
+                    <button type="submit" class="btn waves-effect waves-light btn-primary">
+                        <i class="fa fa-save" aria-hidden="true"></i>
+                        Save Menu
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+    }
+</div>
+
+
+

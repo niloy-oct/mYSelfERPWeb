@@ -1,0 +1,76 @@
+﻿@model IEnumerable<mYSelfERPWeb.ViewModels.NestedMenuViewModel>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+<div class="card">
+    <div class="d-flex justify-content-between align-items-center">
+        <strong class="card-title">Existing Nested Menus</strong>
+        <a href="@Url.Action("Create", "NestedMenu")" class="btn waves-effect waves-light btn-primary">
+            <i class="fa fa-plus-square" aria-hidden="true" class="fill-white me-2"></i> Add New Nested Menu
+        </a>
+    </div>
+</div>
+<div class="card-body">
+
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th style="width: 5px">#</th>
+                    <th>Nested Menu Name</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int sl = 1;
+                }
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@(sl++)</td>
+                        <td>@item.display_name</td>
+
+                        <td>
+                            @if (@item.Active == true)
+                            {
+                                <span class="badge bg-success">Active</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Inactive</span>
+                            }
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Edit", "NestedMenu", new { id = item.Nested_menu_id })">
+                                <i class="far fa-edit"></i>
+                            </a> |
+                            @if (@item.Active == true)
+                            {
+                                <a href="@Url.Action("ChangeNestedMenuStatus", "NestedMenu", new { id = item.Nested_menu_id, status = "false" })">
+                                    <span class="badge bg-danger">Inactive</span>
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("ChangeNestedMenuStatus", "NestedMenu", new { id = item.Nested_menu_id, status = "true" })">
+                                    <span class="badge bg-success">Active</span>
+                                </a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+

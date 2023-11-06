@@ -1,0 +1,67 @@
+﻿@model IEnumerable<mYSelfERPWeb.Models.Module>
+@{
+    ViewBag.Title = "Module List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+
+    <div class="d-flex justify-content-between align-items-center">
+        <h4 class="card-title">Module List</h4>
+        <a href="@Url.Action("Create", "Module")" class="btn waves-effect waves-light btn-primary">
+            <i class="fa fa-plus-square" aria-hidden="true" class="fill-white me-2"></i>Add New Module
+        </a>
+    </div>
+
+    <div class="card-body">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th style="width: 10px">#</th>
+                    <th>Module Name</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int sl = 1;
+                }
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@(sl++)</td>
+                        <td>@item.Module_name</td>
+                        <td>
+                            @if (item.Active)
+                            {
+                                <span class="badge bg-success">Active</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Inactive</span>
+                            }
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Edit", "Module", new { id = item.Module_id })">
+                                <i class="far fa-edit"></i>
+                            </a>
+                            @if (item.Active)
+                            {
+                                <a href="@Url.Action("ChangeModuleStatus", "Module", new { id = item.Module_id, status = "false" })">
+                                    <span class="badge bg-danger">Inactive</span>
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("ChangeModuleStatus", "Module", new { id = item.Module_id, status = "true" })">
+                                    <span class="badge bg-success">Active</span>
+                                </a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

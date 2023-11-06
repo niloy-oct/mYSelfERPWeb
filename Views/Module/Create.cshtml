@@ -1,0 +1,48 @@
+﻿@using mYSelfERPWeb.Models
+@model mYSelfERPWeb.ViewModels.ModuleViewModel
+@{
+    string actionName = ViewContext.RouteData.Values["action"].ToString();
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+}
+
+<div class="card">
+
+    @using (Html.BeginForm(actionName, "Module", FormMethod.Post, new { id = "demo_form2", enctype = "multipart/form-data", @class = "form-horizontal form-label-left" }))
+    {
+        @Html.HiddenFor(model => model.Module_id)
+        <div class="card card-default">
+            <div class="border-bottom title-part-padding">
+                <h4 class="card-title mb-0">Create New Module</h4>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Module name</label>
+                            @Html.TextBoxFor(model => model.Module_name, new { @class = "form-control", placeholder = "Enter module name" })
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>ICON</label>
+                            @Html.TextBoxFor(model => model.Icon, new { @class = "form-control" })
+                            <a href="https://fontawesome.com/v4.7.0/icons/" title="Find Icon here" target="_blank"><span class="fa fa-search"></span> Find Icon here and Copy and Paste 'fa fa' icon field.</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <div class="text-end">
+                    <button type="submit" class="btn waves-effect waves-light btn-primary">
+                        <i class="fa fa-save" aria-hidden="true"></i>Save Module</button>
+
+                </div>
+            </div>
+        </div>
+
+    }
+</div>

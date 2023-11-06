@@ -1,0 +1,58 @@
+﻿@{
+    var menuList = ViewBag.MenueList as List<Dictionary<string, object>>;
+    var submenuList = ViewBag.SubMenueList as List<Dictionary<string, object>>;
+    var nestedMenuList = ViewBag.NestedMenuList as List<Dictionary<string, object>>;
+    var moduleList = ViewBag.ModuleList as List<Dictionary<string, object>>;
+}
+
+<ul class="nav" id="side-menu">
+    @if (moduleList != null)
+    {
+        foreach (var module in moduleList)
+        {
+            <li class="sidebar-item">
+                <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
+                    <i class="@module["Icon"]"></i><span class="hide-menu">@module["Module_name"]</span>
+                </a>
+                @if (menuList != null)
+                {
+                    <ul aria-expanded="false" class="collapse first-level">
+                        @foreach (var menu in menuList.Where(m => m["Module_Id"].ToString() == module["Module_Id"].ToString()).Distinct())
+                        {
+                            <li class="sidebar-item">
+                                <a href="javascript:void(0)" class="sidebar-link"><i class="@menu["Icon"]"></i><span class="hide-menu">@menu["Menu_name"]</span></a>
+                                @if (submenuList != null)
+                                {
+                                    <ul aria-expanded="false" class="collapse second-level">
+                                        @foreach (var submenu in submenuList.Where(s => s["Menu_id"].ToString() == menu["Menu_id"].ToString()).Distinct())
+                                        {
+                                            <li class="sidebar-item">
+                                                <a href="javascript:void(0)" class="sidebar-link">
+                                                    <i class="@submenu["Icon"]"></i><span class="hide-menu">@submenu["display_name"]</span>
+                                                </a>
+                                                @if (nestedMenuList != null)
+                                                {
+                                                    <ul aria-expanded="false" class="collapse third-level">
+                                                        @foreach (var nestedMenu in nestedMenuList.Where(n => n["sub_menu_id"].ToString() == submenu["sub_menu_id"].ToString()).Distinct())
+                                                        {
+                                                            <li class="sidebar-item">
+                                                                <a href="@Url.Content("~/" + nestedMenu["form_location"].ToString())" class="sidebar-link">
+                                                                    <i class="@nestedMenu["icon"]"></i><span class="hide-menu">@nestedMenu["display_name"]</span>
+                                                                </a>
+                                                            </li>
+                                                        }
+                                                    </ul>
+                                                }
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                            </li>
+                        }
+                    </ul>
+                }
+            </li>
+        }
+    }
+</ul>
+

@@ -1,0 +1,50 @@
+﻿
+@model IEnumerable<mYSelfERPWeb.Models.Role>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="card">
+    <div class="d-flex justify-content-between align-items-center">
+        <strong class="card-title">Existing User Role</strong>
+        <a href="@Url.Action("Create", "Role")" class="btn waves-effect waves-light btn-primary">
+            <i class="fa fa-plus-square" aria-hidden="true" class="fill-white me-2"></i> Add New Role
+        </a>
+    </div>
+</div>
+<!-- /.card-header -->
+<div class="card-body">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th style="width: 10px">#</th>
+                <th>Role Name</th>
+                <th>Role Setup</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int sl = 1;
+            }
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@(sl++)</td>
+                    <td>@item.RoleName</td>
+                    <td>
+                        <a href="@Url.Action("Edit", "Role", new { id = item.Id})">
+                            <i class="far fa-paper-plane"></i>
+                        </a>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+

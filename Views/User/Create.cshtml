@@ -1,0 +1,93 @@
+﻿@using mYSelfERPWeb.Models
+@model mYSelfERPWeb.ViewModels.UserViewModel
+@{
+    string actionName = ViewContext.RouteData.Values["action"].ToString();
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string headerTitle;
+    if (actionName == "Edit")
+    {
+        headerTitle = "Edit User ";
+    }
+    else
+    {
+        headerTitle = "New User ";
+
+    }
+}
+
+<div class="card">
+
+    @using (Html.BeginForm(actionName, "User", FormMethod.Post, new { id = "demo_form2", enctype = "multipart/form-data", @class = "form-horizontal form-label-left" }))
+    {
+        <div class="form-group">
+            @Html.HiddenFor(model => model.Id)
+        </div>
+        <div class="card card-default">
+            <div class="border-bottom title-part-padding">
+                <h4 class="card-title mb-0">@headerTitle Information</h4>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>User ID</label>
+                            @Html.TextBoxFor(model => model.UserID, new { @class = "form-control", placeholder = "Enter User ID" })
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Role</label>
+                            <select id="roleId" class="form-control select2" style="width: 100%;" name="roleId">
+                                @foreach (var item in ViewBag.Roles as IEnumerable<SelectListItem>)
+                                {
+                                    <option value="@item.Value" @(item.Value == ViewBag.SelectedRole ? "selected" : "")>@item.Text</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Mother Company</label>
+                            <select id="companyCode" class="form-control select2" style="width: 100%;" name="companyCode">
+                                @foreach (var item in ViewBag.Companies as IEnumerable<SelectListItem>)
+                                {
+                                    <option value="@item.Value" @(item.Value == ViewBag.SelectedCompany ? "selected" : "")>@item.Text</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Sister Concern</label>
+                            <select id="concernCode" class="form-control select2" style="width: 100%;" name="concernCode">
+                                @foreach (var item in ViewBag.Concerns as IEnumerable<SelectListItem>)
+                                {
+                                    <option value="@item.Value" @(item.Value == ViewBag.SelectedConcern ? "selected" : "")>@item.Text</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <div class="text-end">
+                    <button type="submit" class="btn waves-effect waves-light btn-primary">
+                        <i class="fa fa-save" aria-hidden="true"></i>Save User
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    }
+</div>
+
+
+

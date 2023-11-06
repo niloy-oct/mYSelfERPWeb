@@ -1,0 +1,77 @@
+﻿
+@model IEnumerable<mYSelfERPWeb.Models.SalaryBreakupElement>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+                <div class="card">
+                    <div class="d-flex justify-content-between align-items-center">
+                            <strong class="card-title">Existing Salary Breakup Element</strong>
+                            <a href="@Url.Action("Create", "SalaryBreakupElement")" class="btn waves-effect waves-light btn-primary">
+                                <i class="fa fa-plus-square" aria-hidden="true" class="fill-white me-2"></i> Add New Salary Breakup Element</a>
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10px">#</th>
+                                    <th>Code</th>
+                                    <th>Salary Breakup Element</th>
+                                    <th>Remarks</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    int sl = 1;
+                                }
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@(sl++)</td>
+                                        <td>@item.Code</td>
+                                        <td>@item.Name</td>
+                                        <td>@item.Remarks</td>
+                                        <td>
+                                            @if (@item.Active == true)
+                                            {
+                                                <span class="badge bg-success">Active</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger">Inactive</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("Edit", "SalaryBreakupElement", new { id = item.Id})">
+                                                <i class="far fa-edit"></i>
+                                            </a>
+                                            @if (@item.Active == true)
+                                            {
+                                                <a href="@Url.Action("ChangeStatus", "SalaryBreakupElement", new { id = item.Id, status = "false" })">
+                                                    <span class="badge bg-danger">Inactive</span>
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a href="@Url.Action("ChangeStatus", "SalaryBreakupElement", new { id = item.Id, status = "true" })">
+                                                    <span class="badge bg-success">Active</span>
+                                                </a>
+                                            }
+                                        </td>
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+
+

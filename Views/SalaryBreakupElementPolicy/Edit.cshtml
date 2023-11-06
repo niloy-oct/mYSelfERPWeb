@@ -1,0 +1,221 @@
+﻿@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                @using (Html.BeginForm("Edit", "SalaryBreakupElementPolicy", FormMethod.Post))
+                {
+                    <div class="form-body">
+                        <h3 class="card-title">Edit Salary Breakup Elements Policy</h3>
+                        <hr />
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    @Html.DropDownList("SalaryGroup", ViewBag.SalaryGroup as SelectList, "Select Salary Group", new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    @Html.DropDownList("BreakupElement", ViewBag.BreakupElement as SelectList, "Select Breakup Element", new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    @Html.TextBox("Amount", null, new { @class = "form-control", placeholder = "Amount" })
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="mb-3">
+                                    <input type="button" value="Add" id="addButton" class="btn btn-primary" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Breakup Element Code</th>
+                                    <th>Breakup Element Name</th>
+                                    <th>Amount</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="salaryElementsTableBody">
+                                @foreach (var detail in Model.PolicyDetails) // Loop through existing details
+                                {
+                                    <tr data-elementcode="@detail.BreakupElementCode">
+                                        <td>@detail.BreakupElementCode</td>
+                                        <td>@detail.BreakupElementName</td>
+                                        <td>@detail.Amount</td>
+                                        <td>
+                                            <button type='button' class='btn btn-warning editRow'>Edit</button>
+                                            <button type='button' class='btn btn-danger removeRow'>Remove</button>
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+
+                        <div class="form-actions">
+                            <div class="text-end">
+                                <button type="submit" class="btn waves-effect waves-light btn-primary">
+                                    <i class="fa fa-save" aria-hidden="true"></i>
+                                    Save Changes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var addButton = $("#addButton");
+        var saveButton = $("form button[type=submit]");
+        var salaryElementsTableBody = $("#salaryElementsTableBody");
+        var salaryGroupSelect = $("#SalaryGroup");
+        var breakupElementSelect = $("#BreakupElement");
+
+        // Enable the "Add" button when there are elements in the table
+        if (salaryElementsTableBody.find("tr").length > 0) {
+            addButton.prop("disabled", false);
+        }
+
+        addButton.click(function () {
+            var salaryGroupValue = salaryGroupSelect.val();
+            var breakupElementValue = breakupElementSelect.val();
+            var elementText = breakupElementSelect.find("option:selected").text();
+            var amount = $("#Amount").val();
+
+            if (!salaryGroupValue) {
+                toastr.error("Please select a Salary Group.");
+                return;
+            }
+
+            if (!breakupElementValue) {
+                toastr.error("Please select a Breakup Element.");
+                return;
+            }
+
+            if (!amount) {
+                toastr.error("Please enter an Amount.");
+                return;
+            }
+
+            // Check if the same element is already in the table
+            if (isElementAlreadyAdded(breakupElementValue)) {
+                toastr.error("This element is already added.");
+                return;
+            }
+
+            var editButton = "<button type='button' class='btn btn-warning editRow'>Edit</button>";
+            var deleteButton = "<button type='button' class='btn btn-danger removeRow'>Remove</button>";
+            var elementCode = breakupElementSelect.val();
+            var elementName = breakupElementSelect.find("option:selected").text();
+            var row = "<tr data-BreakupElementCode='" + elementCode + "'>" +
+                "<td>" + elementCode + "</td>" +
+                "<td>" + elementName + "</td>" +
+                "<td>" + amount + "</td>" +
+                "<td>" + editButton + " " + deleteButton + "</td>" +
+                "</tr>";
+
+            salaryElementsTableBody.append(row);
+            clearFormInputs();
+            salaryGroupSelect.val(salaryGroupValue); // Reapply the selected value
+
+            // Enable the save button if there's at least one row in the table
+            saveButton.prop("disabled", false);
+
+            // Attach an event handler to the new "Edit" button
+            var newEditButton = salaryElementsTableBody.find("tr[data-BreakupElementCode='" + elementCode + "'] .editRow");
+            newEditButton.click(function () {
+                // Handle the edit action for this row
+                var rowToEdit = $(this).closest("tr");
+                // ...
+            });
+        });
+
+        salaryElementsTableBody.on("click", ".removeRow", function () {
+            $(this).closest("tr").remove();
+
+            // Check if the table is empty and disable the "Add" button
+            if (salaryElementsTableBody.find("tr").length === 0) {
+                addButton.prop("disabled", true);
+                saveButton.prop("disabled", true); // Disable the "Save Changes" button as well
+            }
+        });
+
+        // Event delegation for the "Edit" button
+        salaryElementsTableBody.on("click", ".editRow", function () {
+            var row = $(this).closest("tr");
+            var elements = row.find("td");
+            var elementCode = elements.eq(0).text();
+            var elementName = elements.eq(1).text();
+            var amount = elements.eq(2).text();
+
+            // Populate the form fields for editing
+            breakupElementSelect.find("option:contains(" + elementName + ")").prop('selected', true);
+            $("#Amount").val(amount);
+
+            // Remove the row being edited
+            row.remove();
+        });
+
+        function clearFormInputs() {
+            breakupElementSelect.val(""); // Reset the dropdown selection
+            $("#Amount").val("");
+        }
+
+        function isElementAlreadyAdded(elementValue) {
+            return salaryElementsTableBody.find("tr").filter(function () {
+                return $(this).data("elementcode") === elementValue;
+            }).length > 0;
+        }
+
+        // Add an event handler for the form submission
+        $("form").submit(function (event) {
+            if (salaryElementsTableBody.find("tr").length === 0) {
+                toastr.error("Please add at least one salary breakup element in the table.");
+                event.preventDefault(); // Prevent form submission
+            } else {
+                // Collect the table data
+                var tableData = [];
+                $("#salaryElementsTableBody tr").each(function () {
+                    var cells = $(this).find("td");
+                    tableData.push({
+                        ElementCode: $(this).data("elementcode"),
+                        ElementName: cells.eq(1).text(),
+                        Amount: cells.eq(2).text()
+                    });
+                });
+
+                // Convert table data to JSON
+                var tableDataJson = JSON.stringify(tableData);
+
+                // Create an input element for the JSON data
+                var input = $('<input>')
+                    .attr('type', 'hidden')
+                    .attr('name', 'TableData')
+                    .val(tableDataJson);
+
+                // Get the selected SalaryGroup value
+                var salaryGroupValue = salaryGroupSelect.val();
+
+                // Add the JSON data, SalaryGroup value, and SalaryElement code to the form
+                $("form").append(input);
+                $("form").append('<input type="hidden" name="SalaryGroupValue" value="' + salaryGroupValue + '">');
+            }
+        });
+    });
+</script>

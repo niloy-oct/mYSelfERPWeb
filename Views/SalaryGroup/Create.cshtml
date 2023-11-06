@@ -1,0 +1,73 @@
+﻿@using mYSelfERPWeb.Models
+@model mYSelfERPWeb.ViewModels.SalaryGroupViewModel
+@{
+    string actionName = ViewContext.RouteData.Values["action"].ToString();
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string headerTitle;
+    if (actionName == "Edit")
+    {
+        headerTitle = "Edit Salary Group ";
+    }
+    else
+    {
+        headerTitle = "New Salary Group ";
+
+    }
+}
+
+<div class="card">
+
+    @using (Html.BeginForm(actionName, "SalaryGroup", FormMethod.Post, new { id = "demo_form2", enctype = "multipart/form-data", @class = "form-horizontal form-label-left" }))
+    {
+        <div class="form-group">
+            @Html.HiddenFor(model => model.Id)
+        </div>
+        <div class="card card-default">
+            <div class="border-bottom title-part-padding">
+                <h4 class="card-title mb-0">@headerTitle Information</h4>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Code</label>
+                            @Html.TextBoxFor(model => model.Code, new { @class = "form-control", @readonly = "readonly" })
+                        </div>
+                    </div>
+
+                    <div class="col-md-9">
+                        <div class="form-group">
+                            <label>Salary Group Name</label>
+                            @Html.TextBoxFor(model => model.Name, new { @class = "form-control", placeholder = "Enter salary group name" })
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label>Remarks</label>
+                                @Html.TextBoxFor(model => model.Remarks, new { @class = "form-control", placeholder = "Enter remarks" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <div class="text-end">
+                    <button type="submit" class="btn waves-effect waves-light btn-primary">
+                        <i class="fa fa-save" aria-hidden="true"></i>Save Salary Group
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    }
+</div>
+
+
+

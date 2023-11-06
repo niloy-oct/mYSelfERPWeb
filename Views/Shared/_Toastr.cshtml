@@ -1,0 +1,36 @@
+﻿<head>
+    <script src="@Url.Content("~/dist/libs/jquery/dist/jquery.min.js")"></script>
+
+</head>
+@helper ShowToastMessages(Toastr toastr)
+{
+    if (toastr != null)
+    {
+        <script>
+      $(document).ready(function () {
+        toastr.options.closeButton = '@toastr.ShowCloseButton';
+        toastr.options.newestOnTop = '@toastr.ShowNewestOnTop';
+          toastr.options.positionClass = 'toast-top-right';
+        toastr.options.progressBar = true;
+
+        @foreach (ToastMessage message in toastr.ToastMessages)
+        {
+            string toastTypeValue = message.ToastType.ToString("F").ToLower();
+            @: var optionsOverride =
+            if (message.IsSticky)
+            {
+                @:optionsOverride.timeOut = 0;
+                @:optionsOverride.extendedTimeout = 0;
+            }
+            @:toastr['@toastTypeValue']('@message.Message', '@message.Title', optionsOverride);
+        }
+      });
+        </script>
+    }
+}
+@if (TempData.ContainsKey("Toastr"))
+{
+    Toastr toastr = TempData["Toastr"] as Toastr;
+    @ShowToastMessages(toastr);
+}
+

@@ -1,0 +1,64 @@
+﻿
+@model IEnumerable<mYSelfERPWeb.ViewModels.SalaryBreakupPolicyViewModel>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="card">
+    <div class="d-flex justify-content-between align-items-center">
+        <strong class="card-title">Existing Salary Group Breakup policy</strong>
+        <a href="@Url.Action("Create", "SalaryBreakupElementPolicy")" class="btn waves-effect waves-light btn-primary">
+            <i class="fa fa-plus-square" aria-hidden="true" class="fill-white me-2"></i> Add New Salary Group Breakup Element
+        </a>
+    </div>
+</div>
+<!-- /.card-header -->
+<div class="card-body">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th style="width: 10px">#</th>
+                <th>Salary Group</th>
+                <th>Status</th>
+                <th>Action</th>
+
+
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int sl = 1;
+            }
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@(sl++)</td>
+                    <td>@item.SalaryGroupName</td>
+                    <td>
+                        @if (@item.IsActive == true)
+                        {
+                            <span class="badge bg-success">Active</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Inactive</span>
+                        }
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Edit", "SalaryBreakupElementPolicy", new { salarygroup = item.SalaryGroupCode})">
+                            <i class="far fa-edit"></i>
+                        </a>
+                       
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+

@@ -1,0 +1,65 @@
+﻿@model IEnumerable<mYSelfERPWeb.ViewModels.SisterConcernViewModel>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="d-flex justify-content-between align-items-center">
+        <strong class="card-title">Existing SisterConcern</strong>
+        <a href="@Url.Action("Create", "SisterConcern")" class="btn waves-effect waves-light btn-primary">
+            <i class="fa fa-plus-square" aria-hidden="true" class="fill-white me-2"></i> Add New Sister Concern
+        </a>
+    </div>
+</div>
+<div class="card-body">
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th style="width: 5px">#</th>
+                    <th>Sister Concern Code</th>
+                    <th>Mother Company</th>
+                    <th>Concern Name</th>
+                    <th>Address</th>
+                    <th>Mail Address</th>
+                    <th>Web Address</th>
+                    <th>Concern Logo</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int sl = 1;
+                }
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@(sl++)</td>
+                        <td>@item.SisterConcernCode</td>
+                        <td>@item.CompanyName</td>
+                        <td>@item.SisterConcernName</td>
+                        <td>@item.Address</td>
+                        <td>@item.Email</td>
+                        <td>@item.WebAddress</td>
+                        <td>
+                            @if (item.ComLogo != null)
+                            {
+                                <img src="data:image/png;base64,@Convert.ToBase64String(item.ComLogo)" alt="Sister Concern Logo" width="50" height="50" />
+                            }
+                        </td>
+
+                        <td>
+                            <a href="@Url.Action("Edit", "SisterConcern", new { id = item.Id })">
+                                <i class="far fa-edit"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
